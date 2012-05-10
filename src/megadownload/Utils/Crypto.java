@@ -32,9 +32,9 @@ public class Crypto {
         SealedObject so = null;
         try {
             SecretKeySpec secretKey = new SecretKeySpec(aesKeyData, "AES");
-            Cipher c = Cipher.getInstance("AES");
-            c.init(Cipher.ENCRYPT_MODE, secretKey);
-            so = new SealedObject((Serializable) obj, c);
+            Cipher _cipher = Cipher.getInstance("AES");
+            _cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            so = new SealedObject((Serializable) obj, _cipher);
         } catch (InvalidKeyException ex) {
             Logger.getLogger(Crypto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalBlockSizeException ex) {
@@ -58,9 +58,9 @@ public class Crypto {
         Object s = null;
         try {
             SecretKeySpec secretKey = new SecretKeySpec(aesKeyData, "AES");
-            Cipher c = Cipher.getInstance("AES");
-            c.init(Cipher.DECRYPT_MODE, secretKey);
-            s = (Object) so.getObject(c);
+            Cipher _cipher = Cipher.getInstance("AES");
+            _cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            s = (Object) so.getObject(_cipher);
         } catch (IOException ex) {
             Logger.getLogger(Crypto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
