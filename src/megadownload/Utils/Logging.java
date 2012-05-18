@@ -12,10 +12,12 @@ import megadownload.Exceptions.LoggerException;
 public class Logging {
 
     private final static Map<String, String> config = new HashMap<String, String>();
-    private final static boolean init = false;
+    private static boolean init = false;
+    private final static String defaultPath = "log/";
 
     /**
      * Sets the Logging path
+     *
      * @param path
      */
     public static void setLogPath(String path) {
@@ -27,6 +29,7 @@ public class Logging {
 
     /**
      * Configure the Logging Subsystem
+     *
      * @param config
      */
     public static void configure(Map<String, String> config) {
@@ -37,6 +40,7 @@ public class Logging {
 
     /**
      * Set up the log
+     *
      * @param Log name
      * @return a Logger object
      * @throws LoggerException
@@ -47,6 +51,7 @@ public class Logging {
 
     /**
      * Setup the log in which all messages, errors and messages will be written
+     *
      * @param Log name
      * @param Log filename
      * @return a Logger object
@@ -54,61 +59,37 @@ public class Logging {
      */
     public static Logger setupLog(String string, String filename) throws LoggerException {
         if (!init) {
-            setUpMainLog();
+            if (config.containsKey("logpath")) {
+                new File(config.get("logpath")).mkdirs();
+            } else {
+                new File(defaultPath).mkdirs();
+            }
+            setLog("", "main");
+            init = true;
         }
+        Logger logger = setLog(string, filename);
+        logger.addHandler(new ConsoleHandler());
+        return logger;
+    }
 
+    private static Logger setLog(String string, String filename) throws LoggerException, SecurityException {
         Logger logger = Logger.getLogger(string);
         Handler[] handlers = logger.getHandlers();
         for (Handler h : handlers) {
             logger.removeHandler(h);
             h.close();
         }
-
         String LogDirectory = "log/";
         if (config.containsKey("logpath")) {
             LogDirectory = config.get("logpath");
         }
-
         try {
-            FileHandler fhandler = new FileHandler(LogDirectory + filename + ".log");
+            FileHandler fhandler = new FileHandler(LogDirectory.concat(filename).concat(".log"));
             fhandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fhandler);
         } catch (Exception ex) {
             throw new LoggerException("Cannot create log", ex);
         }
-
-        logger.addHandler(new ConsoleHandler());
-
         return logger;
-    }
-
-    /**
-     * Set ups the main.log file
-     * @throws LoggerException
-     */
-    private static void setUpMainLog() throws LoggerException {
-
-        Logger globalLogger = Logger.getLogger("");
-        Handler[] handlers = globalLogger.getHandlers();
-        for (Handler h : handlers) {
-            //System.out.println("Removing Handler...");
-            globalLogger.removeHandler(h);
-            h.close();
-        }
-
-        String LogDirectory = "log/";
-        if (config.containsKey("logpath")) {
-            LogDirectory = config.get("logpath");
-        }
-
-        try {
-            new File(LogDirectory).mkdirs();
-            FileHandler fhandler = new FileHandler(LogDirectory + "main.log");
-            fhandler.setFormatter(new SimpleFormatter());
-            globalLogger.addHandler(fhandler);
-        } catch (Exception ex) {
-            throw new LoggerException("Cannot create log", ex);
-        }
-
     }
 }

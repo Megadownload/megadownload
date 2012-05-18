@@ -12,8 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import static org.junit.Assert.assertEquals;
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 public class CryptoTest {
     private byte[] aesKey;
     private SecretKeySpec secretKey;
-    private Cipher c;
+    private Cipher cipher;
 
     public CryptoTest() {
     }
@@ -42,7 +42,7 @@ public class CryptoTest {
         (byte)0x04, (byte)0xC5, (byte)0xA3, (byte)0x17, (byte)0x51 };
         secretKey = new SecretKeySpec(aesKey, "AES");
         try {
-            c = Cipher.getInstance("AES");
+            cipher = Cipher.getInstance("AES");
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(CryptoTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchPaddingException ex) {
@@ -60,13 +60,12 @@ public class CryptoTest {
     @Test
     public void testEncryptandDecrypt() {
         try {
-            String encrypt = new String("encrypt");    
-            SealedObject expResult = null;
-            c.init(Cipher.ENCRYPT_MODE, secretKey);
-            expResult = new SealedObject((Serializable) encrypt, c);
+            String encrypt = "encrypt";    
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            SealedObject expResult = new SealedObject((Serializable) encrypt, cipher);
             SealedObject result = Crypto.encrypt(encrypt);
-            c.init(Cipher.DECRYPT_MODE, secretKey);
-            String expDecrypt = (String) expResult.getObject(c);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            String expDecrypt = (String) expResult.getObject(cipher);
             String decrypt = (String) Crypto.decrypt(result);
             assertEquals(expDecrypt, decrypt);
             assertEquals(expDecrypt, encrypt);

@@ -1,0 +1,12 @@
+19-may-2012 0:14:35 megadownload.Threads.ServerThread <init>
+INFO: Server socket created correctly: ServerSocket[addr=0.0.0.0/0.0.0.0,port=0,localport=9876]
+19-may-2012 0:14:35 megadownload.Threads.ServerThread run
+INFO: Starting ServerThread
+19-may-2012 0:15:03 megadownload.Threads.ServerThread run
+INFO: Connection received : Socket[addr=/127.0.0.1,port=60529,localport=9876]
+19-may-2012 0:15:03 megadownload.Threads.ServerThread run
+INFO: Starting FileThread to attend petition...
+19-may-2012 0:17:16 megadownload.Threads.ServerThread run
+INFO: Connection received : Socket[addr=/127.0.0.1,port=60540,localport=9876]
+19-may-2012 0:17:16 megadownload.Threads.ServerThread run
+INFO: Starting FileThread to attend petition...

@@ -34,6 +34,11 @@ public class MegaDownloadUI extends javax.swing.JFrame {
      */
     public MegaDownloadUI() {
         initComponents();
+        try {
+            log = Logging.setupLog("MegaDownloadUI");
+        } catch (LoggerException ex) {
+            Logger.getLogger(MegaDownloadUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -157,14 +162,14 @@ public class MegaDownloadUI extends javax.swing.JFrame {
         ByteFile byteFile = null;
         Socket sock = null;
         try {
-            byteFile = new ByteFile (file);
+            byteFile = new ByteFile(file);
             sock = new Socket(ipEdit.getText(), Integer.parseInt(portEdit.getText()));
         } catch (ConnectException ex) {
             JOptionPane.showMessageDialog(this, "Conexión rechazada");
             log.log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {
             JOptionPane.showMessageDialog(this, "Host desconocido. Asegurate que la dirección es correcta");
-            log.log(Level.SEVERE, null, ex);            
+            log.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, ex.toString());
             log.log(Level.SEVERE, null, ex);
@@ -174,11 +179,11 @@ public class MegaDownloadUI extends javax.swing.JFrame {
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Error recuperando números. Asegurate de que la dirección IP y el puerto no contienen letras");
             log.log(Level.SEVERE, null, ex);
-        } 
-        
+        }
+
         Connection con = new TCPConnection(new ConnectionID(byteFile.fileName()), sock);
         try {
-            
+
             con.send(Crypto.encrypt(byteFile));
         } catch (ConnectionsException ex) {
             log.log(Level.SEVERE, null, ex);
@@ -189,66 +194,11 @@ public class MegaDownloadUI extends javax.swing.JFrame {
     private void buttonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFileActionPerformed
         int returnVal = fileChooser.showOpenDialog(MegaDownloadUI.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-                file = fileChooser.getSelectedFile();
-                //This is where a real application would open the file.
-                textFile.setText(file.getName());
-            } else {
-                
-            }
+            file = fileChooser.getSelectedFile();
+            textFile.setText(file.getName());
+        }
     }//GEN-LAST:event_buttonFileActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /*
-         * Set the Nimbus look and feel
-         */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the
-         * default look and feel. For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MegaDownloadUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MegaDownloadUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MegaDownloadUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MegaDownloadUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /*
-         * Create and display the form
-         */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new MegaDownloadUI().setVisible(true);
-            }
-        });
-        
-        ServerThread serverThread = null;
-        try {
-            Logger log = Logging.setupLog("MegaDownloadUI");
-            serverThread = new ServerThread("ServerThread", Logging.setupLog("ServerThread"));
-        } catch (LoggerException ex) {
-            log.log(Level.SEVERE, null, ex);
-        }
-        serverThread.start();
-    }
-    
     private File file;
     private static Logger log;
     // Variables declaration - do not modify//GEN-BEGIN:variables
