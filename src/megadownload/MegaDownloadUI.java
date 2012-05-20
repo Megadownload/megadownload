@@ -184,11 +184,11 @@ public class MegaDownloadUI extends javax.swing.JFrame {
         Connection con = new TCPConnection(new ConnectionID(byteFile.fileName()), sock);
         try {
 
-            con.send(Crypto.encrypt(byteFile));
-        } catch (ConnectionsException ex) {
-            log.log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex.toString());
-        }
+                con.send(Crypto.encrypt(byteFile));
+            } catch (ConnectionsException ex) {
+                log.log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, ex.toString());
+            }
     }//GEN-LAST:event_buttonSendActionPerformed
 
     private void buttonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFileActionPerformed

@@ -20,7 +20,12 @@ public class ByteFile implements Serializable {
      * @throws IOException
      */
     public ByteFile(File file) throws IOException {
-        if (file == null) throw new NullPointerException();
+        if (file == null) {
+            throw new NullPointerException();
+        }
+        if (!file.exists()){
+            throw new FileNotFoundException();
+        }
         fileName = file.getName();
         InputStream is = new FileInputStream(file);
         long length = file.length();
