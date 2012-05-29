@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * ID of a Connection
+ *
  * @author nacho
  */
 public class ConnectionID implements Serializable {
@@ -12,15 +13,16 @@ public class ConnectionID implements Serializable {
 
     /**
      * Class Constructor
+     *
      * @param name Name of the Connection
      */
     public ConnectionID(String name) {
-
         this.serviceID = name;
     }
 
     /**
      * Returns the string serviceID
+     *
      * @return String
      */
     @Override
@@ -28,13 +30,14 @@ public class ConnectionID implements Serializable {
         return this.serviceID;
     }
 
-   @Override
-   public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
         if (obj instanceof ConnectionID) {
             ConnectionID that = (ConnectionID) obj;
             return this.serviceID.equals(that.serviceID);
+        } else {
+            return false;
         }
-        else return false;
     }
 
     @Override

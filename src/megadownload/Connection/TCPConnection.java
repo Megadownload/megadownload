@@ -32,11 +32,7 @@ public class TCPConnection extends Connection {
      */
     @Override
     public synchronized boolean isConnectionAlive() {
-
-        if (this.connection.isClosed()) {
-            return false;
-        }
-        return true;
+        return !this.connection.isClosed();
     }
 
     /**
@@ -47,24 +43,18 @@ public class TCPConnection extends Connection {
      */
     @Override
     public synchronized void send(Object obj) throws ConnectionsException {
-
+        if (obj == null) {
+            throw new ConnectionsException("Object to send is null!");        
+        }
         OutputStream output;
         ObjectOutputStream dataout;
         byte[] message;
-        int size;
-
-        if (obj == null) {
-            throw new ConnectionsException("Object to send is null!");
-        }
-
         try {
-
             output = connection.getOutputStream();
             dataout = new ObjectOutputStream(output);
             dataout.flush();
             message = convertToByteArray(obj);
-            size = message.length;
-            dataout.writeInt(size);
+            dataout.writeInt(message.length);
             dataout.flush();
             dataout.write(message);
             dataout.flush();
@@ -81,19 +71,14 @@ public class TCPConnection extends Connection {
      */
     @Override
     public synchronized Object recv() throws ConnectionsException {
-
         InputStream input;
         ObjectInputStream datain;
         byte[] message;
-        int size;
         try {
-
             input = connection.getInputStream();
             datain = new ObjectInputStream(input);
-            size = datain.readInt();
-            message = new byte[size];
+            message = new byte[datain.readInt()];
             datain.readFully(message);
-
         } catch (StreamCorruptedException ex) {
             throw new ConnectionsException("StreamCorrupted while receiving data", ex);
         } catch (IOException ex) {
@@ -118,18 +103,14 @@ public class TCPConnection extends Connection {
     }
 
     protected byte[] convertToByteArray(Object data) throws ConnectionsException {
-
         ByteArrayOutputStream byteOutput;
         ObjectOutputStream dataOut;
-
         try {
-
             byteOutput = new ByteArrayOutputStream();
             dataOut = new ObjectOutputStream(byteOutput);
             dataOut.writeObject(data);
             byte[] bytes = byteOutput.toByteArray();
             return bytes;
-
         } catch (IOException ex) {
             throw new ConnectionsException("Conversion to byte array error", ex);
         }
@@ -140,14 +121,11 @@ public class TCPConnection extends Connection {
         Object data;
         ByteArrayInputStream byteInput;
         ObjectInputStream dataIn;
-
         try {
-
             byteInput = new ByteArrayInputStream(bytes);
             dataIn = new ObjectInputStream(byteInput);
             data = (Object) dataIn.readObject();
             return data;
-
         } catch (ClassNotFoundException ex) {
             throw new ConnectionsException("Class not found exception", ex);
         } catch (IOException ex) {

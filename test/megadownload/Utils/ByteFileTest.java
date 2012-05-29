@@ -39,10 +39,10 @@ public class ByteFileTest {
 
     @After
     public void tearDown() {
-        File deleteFile = new File("NewFile");
+     /*   File deleteFile = new File("NewFile");
         if (deleteFile.exists()) {
             file.delete();
-        }
+        }*/
     }
 
     /**

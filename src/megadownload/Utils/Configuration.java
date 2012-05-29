@@ -66,6 +66,6 @@ public class Configuration {
 
     private void setDefaults() {
         props.put("port","9876");
-        props.put("directory", System.getProperty("user.home"));
+        props.put("directory", "");
     }
 }

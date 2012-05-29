@@ -18,7 +18,6 @@ import megadownload.Connection.ConnectionID;
 import megadownload.Connection.TCPConnection;
 import megadownload.Exceptions.ConnectionsException;
 import megadownload.Exceptions.LoggerException;
-import megadownload.Threads.ServerThread;
 import megadownload.Utils.ByteFile;
 import megadownload.Utils.Crypto;
 import megadownload.Utils.Logging;
@@ -184,21 +183,19 @@ public class MegaDownloadUI extends javax.swing.JFrame {
         Connection con = new TCPConnection(new ConnectionID(byteFile.fileName()), sock);
         try {
 
-                con.send(Crypto.encrypt(byteFile));
-            } catch (ConnectionsException ex) {
-                log.log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this, ex.toString());
-            }
+            con.send(Crypto.encrypt(byteFile));
+        } catch (ConnectionsException ex) {
+            log.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.toString());
+        }
     }//GEN-LAST:event_buttonSendActionPerformed
 
     private void buttonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFileActionPerformed
-        int returnVal = fileChooser.showOpenDialog(MegaDownloadUI.this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showOpenDialog(MegaDownloadUI.this) == JFileChooser.APPROVE_OPTION) {
             file = fileChooser.getSelectedFile();
             textFile.setText(file.getName());
         }
     }//GEN-LAST:event_buttonFileActionPerformed
-
     private File file;
     private static Logger log;
     // Variables declaration - do not modify//GEN-BEGIN:variables
